@@ -12,3 +12,10 @@ author.books.create(title: 'A Supposedly Fun Thing I\'ll Never Do again', blurb:
 author.books.create(title: 'Consider the Lobster', blurb: 'Collection of essays')
 author.books.create(title: 'Infinite Jest')
 author.books.create(title: 'Broom in the System')
+
+author.profile = Profile.create(
+  bio: 'an award-winning American novelist, short story writer and essayist',
+  birth: '1962-02-21',
+  death: '2008-09-12'
+)
+author.save!
