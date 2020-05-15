@@ -18,5 +18,38 @@
   <%= @author.name %>
 </p>
 
+<p>
+  <strong>Bio:</strong>
+  <%= @author.bio %>
+</p>
+
+<p>
+  <strong>Born:</strong>
+  <%= @author.birth %>
+</p>
+
+<p>
+  <strong>Died:</strong>
+  <%= @author.death %>
+</p>
+
+<p><strong>Comments:</strong></p>
+<ul>
+  <% @author.comments.each do |comment| -%>
+    <li><%= comment.body %></li>
+  <% end %>
+</ul>
+
+<%= form_with(model: @author, url: comments_path, method: :post) do |form| %>
+  <input type="hidden" name="parent_id" id="parent_id" value="<%= @author.id %>" />
+  <div class="field">
+    <%= form.label :body, hidden: true %>
+    <%= form.text_area :body %>
+  </div>
+  <div class="actions">
+    <%= form.submit 'Create Comment' %>
+  </div>
+<% end %>
+
 <%= link_to 'Edit', edit_author_path(@author) %> |
 <%= link_to 'Back', authors_path %>

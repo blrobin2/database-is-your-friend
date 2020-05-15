@@ -10,5 +10,23 @@
   <%= @book.blurb.truncate(100) %>
 </p>
 
+<p><strong>Comments:</strong></p>
+<ul>
+  <% @book.comments.each do |comment| -%>
+    <li><%= comment.body %></li>
+  <% end %>
+</ul>
+
+<%= form_with(model: @book, url: comments_path, method: :post) do |form| %>
+  <input type="hidden" name="parent_id" id="parent_id" value="<%= @book.id %>" />
+  <div class="field">
+    <%= form.label :body, hidden: true %>
+    <%= form.text_area :body %>
+  </div>
+  <div class="actions">
+    <%= form.submit 'Create Comment' %>
+  </div>
+<% end %>
+
 <%= link_to 'Edit', edit_book_path(@book) %> |
 <%= link_to 'Back', books_path %>
