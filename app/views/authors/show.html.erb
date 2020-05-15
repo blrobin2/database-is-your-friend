@@ -1,0 +1,22 @@
+<p id="notice"><%= notice %></p>
+
+<% if @author.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@author.errors.count, "error") %> prohibited this author from being destroyed:</h2>
+
+    <ul>
+      <% @author.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<p>
+  <strong>Name:</strong>
+  <%= @author.name %>
+</p>
+
+<%= link_to 'Edit', edit_author_path(@author) %> |
+<%= link_to 'Back', authors_path %>
