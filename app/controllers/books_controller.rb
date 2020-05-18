@@ -49,6 +49,9 @@ class BooksController < ApplicationController
         format.json { render json: @book.errors, status: :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StaleObjectError
+    @conflicting = Book.find(@book.id)
+    render action: 'edit'
   end
 
   # DELETE /books/1
@@ -69,6 +72,6 @@ class BooksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def book_params
-      params.require(:book).permit(:title, :blurb)
+      params.require(:book).permit(:title, :blurb, :lock_version)
     end
 end
