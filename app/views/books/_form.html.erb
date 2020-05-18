@@ -32,6 +32,14 @@
     <%= form.text_area :blurb %>
   </div>
 
+  <div class="field">
+    <%= form.label :in_stock %>
+    <%= @book.in_stock %>
+
+    <p><%= link_to('+ Increment', book_increment_path(@book), method: 'post', class: 'btn btn-primary') %></p>
+    <p><%= link_to('- Decrement', book_decrement_path(@book), method: 'post', class: 'btn btn-primary') %></p>
+  </div>
+
   <div class="actions">
     <%= form.submit %>
   </div>

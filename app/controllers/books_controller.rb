@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: [:show, :edit, :update, :destroy]
+  before_action :set_book, only: [:show, :edit, :update, :destroy, :increment, :decrement]
 
   # GET /books
   # GET /books.json
@@ -54,6 +54,18 @@ class BooksController < ApplicationController
     render action: 'edit'
   end
 
+  def increment
+    Book.increment_counter(:in_stock, @book.id)
+    # @book.increment!(:in_stock)
+    redirect_back(fallback_location: book_path(@book))
+  end
+
+  def decrement
+    Book.decrement_counter(:in_stock, @book.id)
+    # @book.decrement!(:in_stock)
+    redirect_back(fallback_location: book_path(@book))
+  end
+
   # DELETE /books/1
   # DELETE /books/1.json
   def destroy
@@ -65,13 +77,14 @@ class BooksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_book
-      @book = Book.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def book_params
-      params.require(:book).permit(:title, :blurb, :lock_version)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_book
+    @book = Book.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def book_params
+    params.require(:book).permit(:title, :blurb, :lock_version, :in_stock)
+  end
 end
