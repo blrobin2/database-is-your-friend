@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_18_174048) do
+ActiveRecord::Schema.define(version: 2020_05_18_182849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,8 +60,16 @@ ActiveRecord::Schema.define(version: 2020_05_18_174048) do
     t.index ["author_id"], name: "index_profiles_on_author_id", unique: true
   end
 
+  create_table "reservations", force: :cascade do |t|
+    t.bigint "book_id", null: false
+    t.datetime "expires_at", null: false
+    t.index ["book_id"], name: "index_reservations_on_book_id"
+    t.index ["expires_at"], name: "index_reservations_on_expires_at"
+  end
+
   add_foreign_key "author_comments", "authors"
   add_foreign_key "book_comments", "books"
   add_foreign_key "books", "authors", on_delete: :restrict
   add_foreign_key "profiles", "authors", on_delete: :restrict
+  add_foreign_key "reservations", "books"
 end
