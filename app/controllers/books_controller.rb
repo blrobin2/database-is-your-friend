@@ -78,35 +78,43 @@ class BooksController < ApplicationController
   end
 
   def move_up
-    Book.transaction do
+    Book.transaction(isolation: :serializable) do
       book = Book.find(params[:id])
       book.move_higher
     end
     redirect_back(fallback_location: books_path)
+  rescue ActiveRecord::TransactionIsolationError, ActiveRecord::SerializationFailure => _e
+    retry
   end
 
   def move_down
-    Book.transaction do
+    Book.transaction(isolation: :serializable) do
       book = Book.find(params[:id])
       book.move_lower
     end
     redirect_back(fallback_location: books_path)
+  rescue ActiveRecord::TransactionIsolationError, ActiveRecord::SerializationFailure => _e
+    retry
   end
 
   def move_to_top
-    Book.transaction do
+    Book.transaction(isolation: :serializable) do
       book = Book.find(params[:id])
       book.move_to_top
     end
     redirect_back(fallback_location: books_path)
+  rescue ActiveRecord::TransactionIsolationError, ActiveRecord::SerializationFailure => _e
+    retry
   end
 
   def move_to_bottom
-    Book.transaction do
+    Book.transaction(isolation: :serializable) do
       book = Book.find(params[:id])
       book.move_to_bottom
     end
     redirect_back(fallback_location: books_path)
+  rescue ActiveRecord::TransactionIsolationError, ActiveRecord::SerializationFailure => _e
+    retry
   end
 
   private
