@@ -1,10 +1,11 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: [:show, :edit, :update, :destroy, :increment, :decrement]
+  before_action :set_book,
+                only: %i[show edit update destroy increment decrement]
 
   # GET /books
   # GET /books.json
   def index
-    @books = Book.all
+    @books = Book.order(:position)
   end
 
   # GET /books/1
@@ -74,6 +75,38 @@ class BooksController < ApplicationController
       format.html { redirect_to books_url, notice: 'Book was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def move_up
+    Book.transaction do
+      book = Book.find(params[:id])
+      book.move_higher
+    end
+    redirect_back(fallback_location: books_path)
+  end
+
+  def move_down
+    Book.transaction do
+      book = Book.find(params[:id])
+      book.move_lower
+    end
+    redirect_back(fallback_location: books_path)
+  end
+
+  def move_to_top
+    Book.transaction do
+      book = Book.find(params[:id])
+      book.move_to_top
+    end
+    redirect_back(fallback_location: books_path)
+  end
+
+  def move_to_bottom
+    Book.transaction do
+      book = Book.find(params[:id])
+      book.move_to_bottom
+    end
+    redirect_back(fallback_location: books_path)
   end
 
   private

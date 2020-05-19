@@ -32,6 +32,7 @@ class Book < ApplicationRecord
   end
 
   belongs_to :author
+  acts_as_list
   has_many :comments, dependent: :destroy, class_name: 'BookComment'
   has_many :reservations
 
