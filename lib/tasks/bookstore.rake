@@ -44,11 +44,10 @@ namespace :bookstore do
     puts 'Revenue by month this year'
     query <<~SQL
       SELECT
-        EXTRACT(month FROM placed_at) as month,
-        SUM(unit_price * quantity) AS revenue
-      FROM sales
-      WHERE
-        placed_at > '2020-01-1'
+        month,
+        SUM(revenue) AS revenue
+      FROM sales_with_days
+      WHERE year = 2020
       GROUP BY month
       ORDER BY month
     SQL

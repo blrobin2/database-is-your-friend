@@ -14,9 +14,18 @@ class AddCalendarDays < ActiveRecord::Migration[6.0]
     execute 'ALTER TABLE calendar_days ADD PRIMARY KEY (day)'
 
     add_column :sales, :placed_on, :date
+
+    execute <<~SQL
+      CREATE VIEW sales_with_days AS
+        SELECT * FROM sales INNER JOIN calendar_days ON DATE(placed_at) = day
+    SQL
   end
 
   def down
+    execute <<~SQL
+      DROP VIEW sales_with_days
+    SQL
+
     remove_column :sales, :placed_on, :date
     drop_table :calendar_days
   end
