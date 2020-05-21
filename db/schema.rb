@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_21_201959) do
+ActiveRecord::Schema.define(version: 2020_05_21_203203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,16 @@ ActiveRecord::Schema.define(version: 2020_05_21_201959) do
     t.string "email", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "calendar_days", primary_key: "day", id: :date, force: :cascade do |t|
+    t.integer "year", null: false
+    t.integer "month", null: false
+    t.integer "day_of_month", null: false
+    t.integer "day_of_week", null: false
+    t.integer "quarter", null: false
+    t.boolean "business_day", null: false
+    t.boolean "weekday", null: false
   end
 
   create_table "order_line_items", force: :cascade do |t|
@@ -106,6 +116,7 @@ ActiveRecord::Schema.define(version: 2020_05_21_201959) do
     t.integer "author_id"
     t.integer "buyer_id"
     t.string "state", limit: 2
+    t.date "placed_on"
   end
 
   create_table "shipping_addresses", force: :cascade do |t|
