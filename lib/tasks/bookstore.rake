@@ -36,11 +36,8 @@ namespace :bookstore do
   task report: :environment do
     puts 'Total book sales'
     query <<~SQL
-      SELECT book_id, SUM(quantity) as quantity
-      FROM order_line_items
-        INNER JOIN orders ON order_id = orders.id
-      WHERE
-        canceled_at IS NULL
+      SELECT book_id, SUM(quantity) AS quantity
+      FROM sales
       GROUP BY book_id
     SQL
 
@@ -49,11 +46,9 @@ namespace :bookstore do
       SELECT
         EXTRACT(month FROM placed_at) as month,
         SUM(unit_price * quantity) AS revenue
-      FROM order_line_items
-        INNER JOIN orders ON order_id = orders.id
+      FROM sales
       WHERE
-        placed_at > '2020-01-1' AND
-        canceled_at IS NULL
+        placed_at > '2020-01-1'
       GROUP BY month
       ORDER BY month
     SQL
@@ -62,14 +57,11 @@ namespace :bookstore do
     query <<~SQL
       SELECT
         author_id,
-        SUM(unit_price * quantity) AS revenue,
+        SUM(revenue) AS revenue,
         SUM(quantity) AS quantity
-      FROM order_line_items
-        INNER JOIN orders ON order_id = orders.id
-        INNER JOIN books ON book_id = books.id
+      FROM sales
       WHERE
-        placed_at > '2020-01-1' AND
-        canceled_at IS NULL
+        placed_at > '2020-01-1'
       GROUP BY author_id
       ORDER BY revenue DESC
     SQL
@@ -79,16 +71,11 @@ namespace :bookstore do
       SELECT
         author_id,
         state,
-        SUM(unit_price * quantity) AS revenue,
+        SUM(revenue) AS revenue,
         SUM(quantity) AS quantity
-      FROM order_line_items
-        INNER JOIN orders ON order_id = orders.id
-        INNER JOIN books ON book_id = books.id
-        INNER JOIN shipping_addresses
-          ON shipping_address_id = shipping_addresses.id
+      FROM sales
       WHERE
-        placed_at > '2020-01-1' AND
-        canceled_at IS NULL
+        placed_at > '2020-01-1'
       GROUP BY author_id, state
       ORDER BY author_id, state
     SQL
