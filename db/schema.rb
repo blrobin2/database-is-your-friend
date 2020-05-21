@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_21_203203) do
+ActiveRecord::Schema.define(version: 2020_05_21_224327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,13 @@ ActiveRecord::Schema.define(version: 2020_05_21_203203) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["book_id"], name: "index_book_comments_on_book_id"
+  end
+
+  create_table "book_genres", force: :cascade do |t|
+    t.bigint "book_id", null: false
+    t.bigint "genre_id", null: false
+    t.index ["book_id"], name: "index_book_genres_on_book_id"
+    t.index ["genre_id"], name: "index_book_genres_on_genre_id"
   end
 
   create_table "books", force: :cascade do |t|
@@ -66,6 +73,17 @@ ActiveRecord::Schema.define(version: 2020_05_21_203203) do
     t.integer "quarter", null: false
     t.boolean "business_day", null: false
     t.boolean "weekday", null: false
+  end
+
+  create_table "genre_groups", force: :cascade do |t|
+    t.string "genre_group_key", null: false
+    t.bigint "genre_id", null: false
+    t.index ["genre_group_key", "genre_id"], name: "index_genre_groups_on_genre_group_key_and_genre_id", unique: true
+    t.index ["genre_id"], name: "index_genre_groups_on_genre_id"
+  end
+
+  create_table "genres", force: :cascade do |t|
+    t.string "name", null: false
   end
 
   create_table "order_line_items", force: :cascade do |t|
@@ -117,6 +135,7 @@ ActiveRecord::Schema.define(version: 2020_05_21_203203) do
     t.integer "buyer_id"
     t.string "state", limit: 2
     t.date "placed_on"
+    t.string "genre_group_key"
   end
 
   create_table "shipping_addresses", force: :cascade do |t|
@@ -129,7 +148,10 @@ ActiveRecord::Schema.define(version: 2020_05_21_203203) do
 
   add_foreign_key "author_comments", "authors"
   add_foreign_key "book_comments", "books"
+  add_foreign_key "book_genres", "books"
+  add_foreign_key "book_genres", "genres"
   add_foreign_key "books", "authors", on_delete: :restrict
+  add_foreign_key "genre_groups", "genres"
   add_foreign_key "order_line_items", "books"
   add_foreign_key "order_line_items", "orders"
   add_foreign_key "orders", "buyers"

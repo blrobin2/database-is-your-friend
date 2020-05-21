@@ -15,22 +15,36 @@ author.profile = Profile.create(
 author.save!
 
 author.comments.create!(body: 'Good author!')
-
+genres = %w[comedy drama horror scifi romance].map do |name|
+  Genre.create!(name: name)
+end
 Book.reset_column_information
 
 book = author.books.create!(
   title: 'A Supposedly Fun Thing I\'ll Never Do again',
-  blurb: 'Collection of essays'
+  blurb: 'Collection of essays',
+  position: 1,
+  genres: genres.sort_by { rand }[0..rand(genres.length)]
 )
 book.comments.create!(body: "I've never been on a cruise ship")
 book.comments.create!(body: 'One of his best')
 
 author.books.create(
   title: 'Consider the Lobster',
-  blurb: 'Collection of essays'
+  blurb: 'Collection of essays',
+  position: 2,
+  genres: genres.sort_by { rand }[0..rand(genres.length)]
 )
-author.books.create(title: 'Infinite Jest')
-author.books.create(title: 'Broom in the System')
+author.books.create(
+  title: 'Infinite Jest',
+  position: 3,
+  genres: genres.sort_by { rand }[0..rand(genres.length)]
+)
+author.books.create(
+  title: 'Broom in the System',
+  position: 4,
+  genres: genres.sort_by { rand }[0..rand(genres.length)]
+)
 
 srand 1
 

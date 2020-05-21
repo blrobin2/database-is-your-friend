@@ -36,6 +36,8 @@ class Book < ApplicationRecord
   has_many :comments, dependent: :destroy, class_name: 'BookComment'
   has_many :reservations
   has_many :order_line_items
+  has_many :book_genres
+  has_many :genres, through: :book_genres
 
   validates :title, presence: true, uniqueness: true
 
