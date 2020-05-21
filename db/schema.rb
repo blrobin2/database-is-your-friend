@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_18_190019) do
+ActiveRecord::Schema.define(version: 2020_05_21_201959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,32 @@ ActiveRecord::Schema.define(version: 2020_05_18_190019) do
     t.index ["title"], name: "index_books_on_title", unique: true
   end
 
+  create_table "buyers", force: :cascade do |t|
+    t.string "email", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "order_line_items", force: :cascade do |t|
+    t.bigint "book_id", null: false
+    t.bigint "order_id", null: false
+    t.integer "unit_price", null: false
+    t.integer "quantity", null: false
+    t.index ["book_id"], name: "index_order_line_items_on_book_id"
+    t.index ["order_id"], name: "index_order_line_items_on_order_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.bigint "shipping_address_id", null: false
+    t.datetime "placed_at", null: false
+    t.datetime "canceled_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["buyer_id"], name: "index_orders_on_buyer_id"
+    t.index ["shipping_address_id"], name: "index_orders_on_shipping_address_id"
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.string "bio"
     t.date "birth"
@@ -69,9 +95,35 @@ ActiveRecord::Schema.define(version: 2020_05_18_190019) do
     t.index ["expires_at"], name: "index_reservations_on_expires_at"
   end
 
+  create_table "sales", force: :cascade do |t|
+    t.datetime "placed_at"
+    t.integer "revenue"
+    t.integer "unit_price"
+    t.integer "quantity"
+    t.integer "order_line_item_id"
+    t.integer "order_id"
+    t.integer "book_id"
+    t.integer "author_id"
+    t.integer "buyer_id"
+    t.string "state", limit: 2
+  end
+
+  create_table "shipping_addresses", force: :cascade do |t|
+    t.string "state"
+    t.bigint "buyer_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["buyer_id"], name: "index_shipping_addresses_on_buyer_id"
+  end
+
   add_foreign_key "author_comments", "authors"
   add_foreign_key "book_comments", "books"
   add_foreign_key "books", "authors", on_delete: :restrict
+  add_foreign_key "order_line_items", "books"
+  add_foreign_key "order_line_items", "orders"
+  add_foreign_key "orders", "buyers"
+  add_foreign_key "orders", "shipping_addresses"
   add_foreign_key "profiles", "authors", on_delete: :restrict
   add_foreign_key "reservations", "books"
+  add_foreign_key "shipping_addresses", "buyers"
 end
