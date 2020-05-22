@@ -15,6 +15,7 @@ class AddGenres < ActiveRecord::Migration[6.0]
     create_table :genre_groups do |t|
       t.string :genre_group_key, null: false
       t.references :genre, null: false
+      t.decimal :multiplier, null: false
     end
 
     add_index :genre_groups, %i[genre_group_key genre_id], unique: true

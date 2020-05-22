@@ -8,10 +8,12 @@ class Sale < ApplicationRecord
 
       existing = GenreGroup.find_by(genre_group_key: genre_group_key)
       unless existing
+        multiplier = 1.0 / genres.size
         genres.each do |genre|
           GenreGroup.create!(
             genre_group_key: genre_group_key,
-            genre: genre
+            genre: genre,
+            multiplier: multiplier
           )
         end
       end

@@ -34,6 +34,42 @@ namespace :bookstore do
   end
 
   task report: :environment do
+    puts
+    genre = Genre.first
+    puts "Revenue of #{genre.name}"
+    query <<~SQL
+      SELECT SUM(revenue)
+      FROM sales
+      INNER JOIN genre_groups gg ON gg.genre_group_key = sales.genre_group_key
+      WHERE genre_id = #{genre.id}
+    SQL
+
+    puts
+    puts 'Revenue by genre (IMPACT)'
+    query <<~SQL
+      SELECT genre_id, SUM(revenue)
+      FROM sales
+      INNER JOIN genre_groups gg
+        ON gg.genre_group_key = sales.genre_group_key
+      GROUP BY genre_id
+    SQL
+
+    puts 'Revenue by genre (Contribution)'
+    query <<~SQL
+      SELECT genre_id, SUM(revenue * multiplier)
+      FROM sales
+      INNER JOIN genre_groups gg
+        ON gg.genre_group_key = sales.genre_group_key
+      GROUP BY genre_id
+    SQL
+
+    puts
+    puts 'Total Revenue'
+    query <<~SQL
+      SELECT SUM(revenue) FROM sales
+    SQL
+
+    exit
     puts 'Total book sales'
     query <<~SQL
       SELECT book_id, SUM(quantity) AS quantity

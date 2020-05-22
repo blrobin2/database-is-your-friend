@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 2020_05_21_224327) do
   create_table "genre_groups", force: :cascade do |t|
     t.string "genre_group_key", null: false
     t.bigint "genre_id", null: false
+    t.decimal "multiplier", null: false
     t.index ["genre_group_key", "genre_id"], name: "index_genre_groups_on_genre_group_key_and_genre_id", unique: true
     t.index ["genre_id"], name: "index_genre_groups_on_genre_id"
   end
